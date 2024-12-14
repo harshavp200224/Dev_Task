@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .controls input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+        }
+        .custom-file-upload:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Image Gallery</h1>
+<div class="controls">
+    <label for="file-upload" class="custom-file-upload">Add Image</label>
+    <input id="file-upload" type="file" accept="image/*">
+    <button id="delete-selected" class="custom-file-upload">Delete Selected</button>
+</div>
+
+<div class="gallery" id="gallery">
+    <!-- Images from the img folder -->
+    <img src="./img/AboutDashboard.png" alt="About Dashboard">
+    <img src="./img/airbnb.png" alt="Airbnb">
+    <img src="./img/Background Hero.svg" alt="Background Hero">
+    <img src="./img/coty.png" alt="Coty">
+    <img src="./img/lilly.png" alt="Lilly">
+    <img src="./img/microsoft.png" alt="Microsoft">
+    <img src="./img/tailus.png" alt="Tailus">
+
+    
+</div>
+
+<script>
+    const fileUpload = document.getElementById('file-upload');
+    const gallery = document.getElementById('gallery');
+    const deleteButton = document.getElementById('delete-selected');
+
+    // Add Image
+    fileUpload.addEventListener('change', (event) => {
+        const files = event.target.files;
+        for (const file of files) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = file.name;
+                img.classList.add('selectable');
+                img.addEventListener('click', () => img.classList.toggle('selected'));
+                gallery.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Delete Selected Images
+    deleteButton.addEventListener('click', () => {
+        const selectedImages = document.querySelectorAll('.gallery img.selected');
+        selectedImages.forEach(img => img.remove());
+    });
+
+    // Style selected images
+    document.addEventListener('DOMContentLoaded', () => {
+        const images = document.querySelectorAll('.gallery img');
+        images.forEach(img => {
+            img.classList.add('selectable');
+            img.addEventListener('click', () => img.classList.toggle('selected'));
+        });
+    });
+</script>
+
+</body>
+</html>
